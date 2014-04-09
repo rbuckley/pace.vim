@@ -11,11 +11,21 @@ let g:loaded_pacevim=1
 let s:save_cpo = &cpo
 set cpo&vim
 
-noremap <unique> <script> <Plug>PaceGetStatus
-noremap <SID>GetStatus :call <SID>GetStatus<CR>
+let g:have_pace_cvs_scripts = 0
+if filereadable("/home/la-cvsbin/statuses")
+    let g:have_pace_cvs_scripts = 1
+endif
 
 function s:GetStatus()
-    exec !cvs status
+    let regbak=@z
+    if g:have_pace_cvs_scripts
+        let @z=system('statuses -nouk -noutd -nolocal -q')
+        10sv
+        silent normal! "zP
+    else
+        let @z=system('cvs statuses')
+    endif
+    let @z=regbak
 endfunction
 
 if !exists(":PaceStatus")
