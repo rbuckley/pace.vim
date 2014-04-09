@@ -1,0 +1,10 @@
+*pace.txt*	For Vim version 7.3	Last change: 2014 April 9
+
+
+
+
+
+
+
+
+vim:tw=78:ts=8:ft=help:norl:
