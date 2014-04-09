@@ -8,9 +8,18 @@ if exists("g:loaded_pacevim")
 endif
 let g:loaded_pacevim=1
 
+let s:save_cpo = &cpo
+set cpo&vim
 
+noremap <unique> <script> <Plug>PaceGetStatus
+noremap <SID>GetStatus :call <SID>GetStatus<CR>
 
-
-function s:PaceGetStatus()
+function s:GetStatus()
     exec !cvs status
 endfunction
+
+if !exists(":PaceStatus")
+    command -nargs=0 PaceStatus :call s:GetStatus()
+endif
+
+let &cpo = s:save_cpo
