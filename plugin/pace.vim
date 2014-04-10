@@ -8,6 +8,10 @@ if exists("g:loaded_pacevim")
 endif
 let g:loaded_pacevim=1
 
+if !exists("g:cvs_command")
+    let g:cvs_cmd = "cvs"
+endif
+
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -17,15 +21,17 @@ if filereadable("/home/la-cvsbin/statuses")
 endif
 
 function s:GetStatus()
-    let regbak=@z
     if g:have_pace_cvs_scripts
-        let @z=system('statuses -nouk -noutd -nolocal -q')
-        10sv
-        silent normal! "zP
+        let statuses=system('statuses -nouk -noutd -nolocal -q')
+        pedit __CVS_Status__
+        wincmd P
+        normal! ggdG
+        setlocal buftype=nofile
+        nnoremap <buffer> <silent> q :<C-U>bdelete<CR>
+        call append(0, split(statuses, '\n'))
     else
         let @z=system('cvs statuses')
     endif
-    let @z=regbak
 endfunction
 
 if !exists(":PaceStatus")
