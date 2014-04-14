@@ -16,6 +16,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let g:pace_src_dir = '/export/home/'.$USER.'/src/'
+let s:pace_platforms = ['xh1', 'hr44', 'shr44', 'hr34']
 
 let g:have_pace_cvs_scripts = 0
 if filereadable("/home/la-cvsbin/statuses")
@@ -49,8 +50,12 @@ function! s:GetStatus()
     endif
 endfunction
 
+function! s:EnvComplete(A, L, P)
+    return filter(copy(s:pace_platforms), 'v:val =~ "^".a:A')
+endfunction
+
 command -nargs=0 PaceStatus :call s:GetStatus()
-command -nargs=1 PaceSetEnv :call s:SetEnv(<f-args>)
+command -nargs=1 -complete=customlist,s:EnvComplete PaceSetEnv :call s:SetEnv(<f-args>)
 command -nargs=0 PaceGoSrc :call s:GoSrcDir()
 
 let &cpo = s:save_cpo
